@@ -1,6 +1,7 @@
 package io.github.burningdzire.githubreposearch;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,6 +9,10 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.net.URL;
+
+import io.github.burningdzire.githubreposearch.utilities.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
         mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_result_json);
     }
 
+    private void makeGithubSearchQuery() {
+        String githubSearchQuery = mSearchBoxEditText.getText().toString();
+        URL githubSearchQueryUrl = NetworkUtils.buildUrl(githubSearchQuery);
+        mUrlDisplayTextView.setText(githubSearchQueryUrl.toString());
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -34,11 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int itemThatwasSelected = item.getItemId();
-        if (itemThatwasSelected == R.id.action_search){
-            Context context = MainActivity.this;
-            String Message = "Search Clicked";
-            Toast.makeText(context, Message, Toast.LENGTH_LONG).show();
+        int itemThatWasClickedId = item.getItemId();
+        if (itemThatWasClickedId == R.id.action_search) {
+            makeGithubSearchQuery();
             return true;
         }
         return super.onOptionsItemSelected(item);
