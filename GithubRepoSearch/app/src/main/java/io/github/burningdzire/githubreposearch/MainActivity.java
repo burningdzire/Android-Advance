@@ -2,6 +2,7 @@ package io.github.burningdzire.githubreposearch;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,14 +39,30 @@ public class MainActivity extends AppCompatActivity {
         URL githubSearchUrl = NetworkUtils.buildUrl(githubSearchQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
 
-        String githubSearchResults = null;
-        try
-        {
-            githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl);
+        GithubQueryTask githubQueryTask = new GithubQueryTask();
+        githubQueryTask.execute(githubSearchUrl);
+    }
+
+
+    public class GithubQueryTask extends AsyncTask<URL, Void, String> {
+
+        @Override
+        protected String doInBackground(URL... urls) {
+            URL githubSearchUrl = urls[0];
+            String githubSearchResults = null;
+            try {
+                githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl);
+            } catch (IOException e) {
+                Log.d(LOG_TAG, "Could not get response", e);
+            }
+            return githubSearchResults;
+        }
+
+        @Override
+        protected void onPostExecute(String githubSearchResults) {
+            if (githubSearchResults == null || githubSearchResults == "")
+                return;
             mSearchResultsTextView.setText(githubSearchResults);
-        } catch (IOException e)
-        {
-            Log.d(LOG_TAG, "Could not get response", e);
         }
     }
 
