@@ -4,12 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.net.URL;
 
 import io.github.burningdzire.githubreposearch.utilities.NetworkUtils;
@@ -33,8 +35,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void makeGithubSearchQuery() {
         String githubSearchQuery = mSearchBoxEditText.getText().toString();
-        URL githubSearchQueryUrl = NetworkUtils.buildUrl(githubSearchQuery);
-        mUrlDisplayTextView.setText(githubSearchQueryUrl.toString());
+        URL githubSearchUrl = NetworkUtils.buildUrl(githubSearchQuery);
+        mUrlDisplayTextView.setText(githubSearchUrl.toString());
+
+        String githubSearchResults = null;
+        try
+        {
+            githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl);
+            mSearchResultsTextView.setText(githubSearchResults);
+        } catch (IOException e)
+        {
+            Log.d(LOG_TAG, "Could not get response", e);
+        }
     }
 
     @Override
