@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText mSearchBoxEditText;
     private TextView mUrlDisplayTextView;
     private TextView mSearchResultsTextView;
+    private TextView mErrorMessageDisplayTextView;
+    private ProgressBar mLoadingIndicatorProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         mSearchBoxEditText = (EditText) findViewById(R.id.et_search_box);
         mUrlDisplayTextView = (TextView) findViewById(R.id.tv_url_display);
         mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_result_json);
+        mErrorMessageDisplayTextView = (TextView) findViewById(R.id.tv_error_message_display);
+        mLoadingIndicatorProgressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
     }
 
     private void makeGithubSearchQuery() {
@@ -43,8 +49,23 @@ public class MainActivity extends AppCompatActivity {
         githubQueryTask.execute(githubSearchUrl);
     }
 
+    private void showJsonDataView() {
+        mSearchResultsTextView.setVisibility(View.VISIBLE);
+        mErrorMessageDisplayTextView.setVisibility(View.INVISIBLE);
+    }
+
+    private void showErrorMessage() {
+        mSearchResultsTextView.setVisibility(View.INVISIBLE);
+        mErrorMessageDisplayTextView.setVisibility(View.VISIBLE);
+    }
 
     public class GithubQueryTask extends AsyncTask<URL, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mLoadingIndicatorProgressBar.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected String doInBackground(URL... urls) {
@@ -60,9 +81,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String githubSearchResults) {
-            if (githubSearchResults == null || githubSearchResults == "")
+            mLoadingIndicatorProgressBar.setVisibility(View.INVISIBLE);
+            if (githubSearchResults == null || githubSearchResults == "") {
+                showErrorMessage();
                 return;
+            }
             mSearchResultsTextView.setText(githubSearchResults);
+            showJsonDataView();
         }
     }
 

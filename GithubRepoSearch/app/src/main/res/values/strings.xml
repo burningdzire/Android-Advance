@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Github Search</string>
     <string name="search">Search</string>
+    <string name="error">Error in fetching results. Please try again.</string>
 </resources>
