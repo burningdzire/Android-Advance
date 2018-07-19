@@ -8,31 +8,29 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements  GreenAdapter.ListItemClickListener{
 
     private static final int NUM_LIST_ITEMS = 100;
 
     private GreenAdapter mAdapter;
     private RecyclerView mNumbersList;
 
+    private Toast mToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
-
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mNumbersList.setLayoutManager(layoutManager);
 
-
         mNumbersList.setHasFixedSize(true);
-
-
-        mAdapter = new GreenAdapter(NUM_LIST_ITEMS);
+        mAdapter = new GreenAdapter(NUM_LIST_ITEMS, this);
         mNumbersList.setAdapter(mAdapter);
     }
 
@@ -44,15 +42,28 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id)
-        {
+
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+
             case R.id.action_refresh:
-                mAdapter = new GreenAdapter(NUM_LIST_ITEMS);
+                mAdapter = new GreenAdapter(NUM_LIST_ITEMS, this);
                 mNumbersList.setAdapter(mAdapter);
                 return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        if (mToast != null)
+        {
+            mToast.cancel();
+        }
+        String toastMessage =  "Item has been clicked";
+        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT);
+        mToast.show();
+    }
 }
