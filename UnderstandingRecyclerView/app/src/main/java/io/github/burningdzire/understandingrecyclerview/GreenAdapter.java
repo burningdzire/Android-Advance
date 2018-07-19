@@ -3,6 +3,7 @@ package io.github.burningdzire.understandingrecyclerview;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,13 @@ import android.widget.TextView;
 public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHolder> {
 
 
+    private static final String TAG = GreenAdapter.class.getSimpleName();
+
     private int mNumberItems;
 
     public GreenAdapter(int numberOfItems) {
         mNumberItems = numberOfItems;
     }
-
 
     @NonNull
     @Override
@@ -33,6 +35,7 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
 
     @Override
     public void onBindViewHolder(@NonNull NumberViewHolder holder, int position) {
+        Log.d(TAG, "#" + String.valueOf(position));
         holder.bind(position);
     }
 
