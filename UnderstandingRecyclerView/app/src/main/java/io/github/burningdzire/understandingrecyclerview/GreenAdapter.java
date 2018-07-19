@@ -1,7 +1,6 @@
 package io.github.burningdzire.understandingrecyclerview;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,30 +11,39 @@ import android.widget.TextView;
 
 public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHolder> {
 
-
     private static final String TAG = GreenAdapter.class.getSimpleName();
 
+    private static int viewHolderCount;
     private int mNumberItems;
+
 
     public GreenAdapter(int numberOfItems) {
         mNumberItems = numberOfItems;
+        viewHolderCount = 0;
     }
 
-    @NonNull
     @Override
-    public NumberViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public NumberViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
         int layoutIdForListItem = R.layout.number_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
-        return new NumberViewHolder(view);
+        NumberViewHolder viewHolder = new NumberViewHolder(view);
+        viewHolder.viewHolderIndex.setText("ViewHolder index: " + viewHolderCount);
+
+        int backgroundColor = ColorUtils.getViewHolderBackgroundColorFromInstance(context,viewHolderCount);
+        viewHolder.itemView.setBackgroundColor(backgroundColor);
+        viewHolderCount++;
+        Log.d(TAG, "#" + viewHolderCount);
+
+        return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NumberViewHolder holder, int position) {
-        Log.d(TAG, "#" + String.valueOf(position));
+    public void onBindViewHolder(NumberViewHolder holder, int position) {
+        Log.d(TAG, "#" + position);
         holder.bind(position);
     }
 
@@ -44,18 +52,17 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
         return mNumberItems;
     }
 
-
     class NumberViewHolder extends RecyclerView.ViewHolder {
 
         TextView listItemNumberView;
-
+        TextView viewHolderIndex;
 
         public NumberViewHolder(View itemView) {
             super(itemView);
 
             listItemNumberView = (TextView) itemView.findViewById(R.id.tv_item_number);
+            viewHolderIndex = (TextView) itemView.findViewById(R.id.tv_view_holder_instance);
         }
-
 
         void bind(int listIndex) {
             listItemNumberView.setText(String.valueOf(listIndex));
