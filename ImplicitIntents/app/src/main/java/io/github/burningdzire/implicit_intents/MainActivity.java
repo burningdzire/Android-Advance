@@ -2,6 +2,7 @@ package io.github.burningdzire.implicit_intents;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,11 +22,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickOpenAddressButton(View view) {
-        showMap();
+        String addressString = "1600 Amphitheatre Parkway, CA";
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("geo")
+                .path("0,0")
+                .query(addressString);
+
+        Uri geoLocation = builder.build();
+        showMap(geoLocation);
     }
 
     public void onClickShareTextButton(View view) {
-        Toast.makeText(this, "TODO: Share Text Content", Toast.LENGTH_SHORT).show();
+        String textToShare = "Hello there";
+        shareText(textToShare);
     }
 
     public void createYourOwn(View view) {
@@ -43,20 +52,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showMap()
+    private void showMap(Uri geoLocation)
     {
-        String addressString = "1600 Amphitheatre Parkway, CA";
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme("geo")
-                .path("0,0")
-                .query(addressString);
-
-        Uri address = builder.build();
-
-        Intent intent = new Intent(Intent.ACTION_VIEW, address);
+        Intent intent = new Intent(Intent.ACTION_VIEW, geoLocation);
 
         if (intent.resolveActivity(getPackageManager()) != null)
             startActivity(intent);
+    }
+
+    private void shareText(String textToShare)
+    {
+        String mimeType = "text/plain";
+        String title = "Share Text";
+
+        ShareCompat.IntentBuilder
+                .from(this)
+                .setChooserTitle(title)
+                .setType(mimeType)
+                .setText(textToShare)
+                .startChooser();
     }
 
 }
