@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickOpenAddressButton(View view) {
-        Toast.makeText(this, "TODO: Open Location in Map", Toast.LENGTH_SHORT).show();
+        showMap();
     }
 
     public void onClickShareTextButton(View view) {
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "TODO: Create Your Own ", Toast.LENGTH_SHORT).show();
     }
 
-    public void openWebPage(String requestUrlString)
+    private void openWebPage(String requestUrlString)
     {
         Uri webpage = Uri.parse(requestUrlString);
         Intent intentOpenWebPage = new Intent(Intent.ACTION_VIEW, webpage);
@@ -42,4 +42,21 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intentOpenWebPage);
         }
     }
+
+    private void showMap()
+    {
+        String addressString = "1600 Amphitheatre Parkway, CA";
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("geo")
+                .path("0,0")
+                .query(addressString);
+
+        Uri address = builder.build();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, address);
+
+        if (intent.resolveActivity(getPackageManager()) != null)
+            startActivity(intent);
+    }
+
 }
