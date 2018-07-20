@@ -15,7 +15,6 @@ public final class SunshineWeatherUtils {
      * This method will convert a temperature from Celsius to Fahrenheit.
      *
      * @param temperatureInCelsius Temperature in degrees Celsius(°C)
-     *
      * @return Temperature in degrees Fahrenheit (°F)
      */
     private static double celsiusToFahrenheit(double temperatureInCelsius) {
@@ -31,7 +30,6 @@ public final class SunshineWeatherUtils {
      *
      * @param context     Android Context to access preferences and resources
      * @param temperature Temperature in degrees Celsius (°C)
-     *
      * @return Formatted temperature String in the following form:
      * "21°C"
      */
@@ -54,7 +52,6 @@ public final class SunshineWeatherUtils {
      * @param context Android Context to access preferences and resources
      * @param high    High temperature for a day in user's preferred units
      * @param low     Low temperature for a day in user's preferred units
-     *
      * @return String in the form: "HIGH°C / LOW°C"
      */
     public static String formatHighLows(Context context, double high, double low) {
@@ -76,7 +73,6 @@ public final class SunshineWeatherUtils {
      * @param windSpeed Wind speed in kilometers / hour
      * @param degrees   Degrees as measured on a compass, NOT temperature degrees!
      *                  See https://www.mathsisfun.com/geometry/degrees.html
-     *
      * @return Wind String in the following form: "2 km/h SW"
      */
     public static String getFormattedWind(Context context, float windSpeed, float degrees) {
@@ -120,7 +116,6 @@ public final class SunshineWeatherUtils {
      * @param context   Android context
      * @param weatherId from OpenWeatherMap API response
      *                  http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
-     *
      * @return String for the weather condition, null if no relation is found.
      */
     public static String getStringForWeatherCondition(Context context, int weatherId) {
@@ -297,7 +292,6 @@ public final class SunshineWeatherUtils {
      * by the OpenWeatherMap call.
      *
      * @param weatherId from OpenWeatherMap API response
-     *
      * @return resource id for the corresponding icon. -1 if no relation is found.
      */
     public static int getIconResourceForWeatherCondition(int weatherId) {
@@ -336,7 +330,6 @@ public final class SunshineWeatherUtils {
      * by the OpenWeatherMap call.
      *
      * @param weatherId from OpenWeatherMap API response
-     *
      * @return resource id for the corresponding icon. -1 if no relation is found.
      */
     public static int getArtResourceForWeatherCondition(int weatherId) {
