@@ -1,10 +1,13 @@
 package io.github.burningdzire.androidlifecycle;
 
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,6 +17,14 @@ public class MainActivity extends AppCompatActivity {
      * being posted.
      */
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    // COMPLETED (1) Create a key String called LIFECYCLE_CALLBACKS_TEXT_KEY
+    /*
+     * This constant String will be used to store the content of the TextView used to display the
+     * list of callbacks. The reason we are storing the contents of the TextView is so that you can
+     * see the entire set of callbacks as they are called.
+     */
+    private static final String LIFECYCLE_CALLBACKS_TEXT_KEY = "callbacks";
 
     /* Constant values for the names of each respective lifecycle callback */
     private static final String ON_CREATE = "onCreate";
@@ -46,46 +57,119 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mLifecycleDisplay = (TextView) findViewById(R.id.tv_lifecycle_events_display);
+
+        // COMPLETED (6) If savedInstanceState is not null and contains LIFECYCLE_CALLBACKS_TEXT_KEY, set that text on our TextView
+        /*
+         * If savedInstanceState is not null, that means our Activity is not being started for the
+         * first time. Even if the savedInstanceState is not null, it is smart to check if the
+         * bundle contains the key we are looking for. In our case, the key we are looking for maps
+         * to the contents of the TextView that displays our list of callbacks. If the bundle
+         * contains that key, we set the contents of the TextView accordingly.
+         */
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(LIFECYCLE_CALLBACKS_TEXT_KEY)) {
+                String allPreviousLifecycleCallbacks = savedInstanceState
+                        .getString(LIFECYCLE_CALLBACKS_TEXT_KEY);
+                mLifecycleDisplay.setText(allPreviousLifecycleCallbacks);
+            }
+        }
+
         logAndAppend(ON_CREATE);
     }
 
-
+    /**
+     * Called when the activity is becoming visible to the user.
+     *
+     * Followed by onResume() if the activity comes to the foreground, or onStop() if it becomes
+     * hidden.
+     */
     @Override
     protected void onStart() {
         super.onStart();
+
         logAndAppend(ON_START);
     }
 
-
+    /**
+     * Called when the activity will start interacting with the user. At this point your activity
+     * is at the top of the activity stack, with user input going to it.
+     *
+     * Always followed by onPause().
+     */
     @Override
     protected void onResume() {
         super.onResume();
+
         logAndAppend(ON_RESUME);
     }
 
-
+    /**
+     * Called when the system is about to start resuming a previous activity. This is typically
+     * used to commit unsaved changes to persistent data, stop animations and other things that may
+     * be consuming CPU, etc. Implementations of this method must be very quick because the next
+     * activity will not be resumed until this method returns.
+     *
+     * Followed by either onResume() if the activity returns back to the front, or onStop() if it
+     * becomes invisible to the user.
+     */
     @Override
     protected void onPause() {
         super.onPause();
+
         logAndAppend(ON_PAUSE);
     }
 
+    /**
+     * Called when the activity is no longer visible to the user, because another activity has been
+     * resumed and is covering this one. This may happen either because a new activity is being
+     * started, an existing one is being brought in front of this one, or this one is being
+     * destroyed.
+     *
+     * Followed by either onRestart() if this activity is coming back to interact with the user, or
+     * onDestroy() if this activity is going away.
+     */
     @Override
     protected void onStop() {
         super.onStop();
+
         logAndAppend(ON_STOP);
     }
 
+    /**
+     * Called after your activity has been stopped, prior to it being started again.
+     *
+     * Always followed by onStart()
+     */
     @Override
     protected void onRestart() {
         super.onRestart();
+
         logAndAppend(ON_RESTART);
     }
 
+    /**
+     * The final call you receive before your activity is destroyed. This can happen either because
+     * the activity is finishing (someone called finish() on it, or because the system is
+     * temporarily destroying this instance of the activity to save space. You can distinguish
+     * between these two scenarios with the isFinishing() method.
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         logAndAppend(ON_DESTROY);
+    }
+
+    // COMPLETED (2) Override onSaveInstanceState
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // COMPLETED (3) Call super.onSaveInstanceState
+        super.onSaveInstanceState(outState);
+        // COMPLETED (4) Call logAndAppend with the ON_SAVE_INSTANCE_STATE String
+        logAndAppend(ON_SAVE_INSTANCE_STATE);
+        // COMPLETED (5) Put the text from the TextView in the outState bundle
+        String lifecycleDisplayTextViewContents = mLifecycleDisplay.getText().toString();
+        outState.putString(LIFECYCLE_CALLBACKS_TEXT_KEY, lifecycleDisplayTextViewContents);
     }
 
     /**
