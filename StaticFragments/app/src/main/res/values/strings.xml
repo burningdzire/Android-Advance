@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">StaticFragments</string>
+    <string name="question_article">Liked the article?</string>
+    <string name="rb_text_yes">YES</string>
+    <string name="rb_text_no">NO</string>
+    <string name="tv_article_text">
+        A quick brown fox jumps over a lazy dog
+    </string>
+    <string name="yes_message">ARTICLE: Like</string>
+    <string name="no_message">ARTICLE: Thanks</string>
+</resources>
